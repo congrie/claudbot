@@ -1,0 +1,72 @@
+# PROJECT: Claudbot — TradingView VWAP Alert Bot
+
+## Objective
+Build and maintain a lightweight Python webhook server that receives TradingView webhook alerts for VWAP trading signals and sends push notifications through Pushover.
+
+The system currently:
+- Uses TradingView alerts
+- Uses Flask webhook server
+- Uses ngrok for public tunneling
+- Uses Pushover for mobile notifications
+- Runs locally on Windows
+- Uses 1H timeframe VWAP logic
+- Tracks:
+  - VWAP_RECLAIM
+  - VWAP_HOLD_ABOVE
+  - VWAP_REJECT
+  - TEST
+
+The system has already been tested successfully:
+- ngrok forwarding works
+- POST /tv returns 200
+- TradingView alerts successfully reach Flask
+- JSON parsing works
+- Secret matching works
+
+The current system is considered STABLE.
+
+---
+
+# ENVIRONMENT
+
+Windows local machine.
+
+Typical paths:
+- C:\claudbot\webhook_server.py
+- C:\claudbot\logs.txt
+
+Python packages:
+- flask
+- requests
+- python-dotenv
+
+ngrok:
+- forwarding HTTPS traffic to localhost:5000
+
+---
+
+# CURRENT ARCHITECTURE
+
+TradingView
+→ ngrok public HTTPS tunnel
+→ Flask /tv webhook endpoint
+→ event parsing
+→ optional gating logic
+→ Pushover push notification
+
+---
+
+# CURRENT WEBHOOK PAYLOAD FORMAT
+
+TradingView sends JSON like:
+
+```json
+{
+  "secret": "tv_secret_9F3kA82xQpL7M2",
+  "ticker": "MU",
+  "timeframe": "1H",
+  "event": "VWAP_RECLAIM",
+  "price": "371.33",
+  "volume": "371207",
+  "notes": "MU 1H reclaim (swing)"
+}
