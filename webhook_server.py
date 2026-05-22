@@ -1,5 +1,5 @@
 import os
-import re
+import hmac
 from datetime import datetime
 from typing import Any, Dict, Optional, Tuple
 
@@ -57,7 +57,7 @@ def safe_float(x: Any) -> Optional[float]:
 
 def log_line(text: str) -> None:
     os.makedirs("logs", exist_ok=True)
-    with open(r"logs\trades.log", "a", encoding="utf-8") as f:
+    with open(os.path.join("logs", "trades.log"), "a", encoding="utf-8") as f:
         f.write(f"\n[{now_ts()}] {text}\n")
 
 
@@ -127,8 +127,8 @@ def tv_webhook():
 
     # 2) Auth
     secret = str(data.get("secret", "")).strip()
-    if secret != TV_WEBHOOK_SECRET:
-        log_line(f"AUTH_FAIL payload={data}")
+    if not hmac.compare_digest(secret, TV_WEBHOOK_SECRET):
+        log_line("AUTH_FAIL")
         return jsonify({"ok": False, "error": "bad_secret"}), 403
 
     # 3) Pull fields (Pine script provides these)

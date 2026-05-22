@@ -148,7 +148,7 @@ ALERT (timeframe {timeframe}):
 
 def log_result(alert_text: str, output_text: str) -> None:
     os.makedirs("logs", exist_ok=True)
-    with open(r"logs\trades.log", "a", encoding="utf-8") as f:
+    with open(os.path.join("logs", "trades.log"), "a", encoding="utf-8") as f:
         f.write(f"\n[{datetime.now().isoformat(timespec='seconds')}]\n")
         f.write("=== ALERT ===\n")
         f.write(alert_text.strip() + "\n")
