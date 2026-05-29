@@ -196,7 +196,6 @@ def tv_webhook():
 
     return jsonify({"ok": True, "handled": "action_pushed", "ticker": ticker, "timeframe": tf})
 
-
 if __name__ == "__main__":
-    # Bind to localhost:5000
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    port = int(os.getenv("PORT", "5050"))
+    app.run(host="0.0.0.0", port=port, debug=False)
